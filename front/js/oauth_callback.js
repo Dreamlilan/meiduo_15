@@ -27,14 +27,15 @@ var vm = new Vue({
         sms_code: '',
         access_token: ''
     },
-    mounted: function(){
-         // 从路径中获取qq重定向返回的code
+       mounted: function(){
+        // 从路径中获取qq重定向返回的code
         var code = this.get_query_string('code');
         axios.get(this.host + '/oauth/qq/users/?code=' + code, {
                 responseType: 'json',
+                withCredentials: true
             })
             .then(response => {
-                 if (response.data.user_id){
+                if (response.data.user_id){
                     // 用户已绑定
                     sessionStorage.clear();
                     localStorage.clear();
@@ -42,13 +43,12 @@ var vm = new Vue({
                     localStorage.username = response.data.username;
                     localStorage.token = response.data.token;
 
-                    // 从路径中取出state,引导用户进入登录成功之后的页面
+                    // 登录成功后，根据state将用户引导到登录成功后的页面
                     var state = this.get_query_string('state');
                     location.href = state;
                 } else {
                     // 用户未绑定
                     this.access_token = response.data.access_token;
-                    this.generate_image_code();
                     this.is_show_waiting = false;
                 }
             })
