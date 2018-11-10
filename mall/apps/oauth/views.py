@@ -22,7 +22,7 @@ GET  /oauth/qq/statues/
 
 class OauthQQURLView(APIView):
     def get(self, request):
-        state = '/'
+        state = 'test'
         # 1.初始化OAuthQQ对象
         oauth = OAuthQQ(client_id=settings.QQ_CLIENT_ID,
                         client_secret=settings.QQ_CLIENT_SECRET,
@@ -171,14 +171,15 @@ eyJvcGVuaWQiOiIxMjM0NTY3ODkwIn0.
 
 """
 
-# # 4.对数据进行解密
-# serializer.loads(token)
-#
-# # 5.有效期
-# serializer = Serializer(settings.SECRET_KEY, 1)
-#
-# data = {'openid': '1234567890'}
-#
-# token = serializer.dumps(data)
-#
-# serializer.loads(token)
+# 4.对数据进行解密
+# 4.对数据进行解密
+serializer.loads(token)
+
+# 5.有效期
+serializer = Serializer(settings.SECRET_KEY, 1)
+
+data = {'openid': '1234567890'}
+
+token = serializer.dumps(data)
+
+serializer.loads(token)

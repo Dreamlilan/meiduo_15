@@ -8,7 +8,11 @@ urlpatterns = [
     url(r'^auths/$', obtain_jwt_token),
 
     url(r'^$', views.RegisterCreateUserView.as_view(),name='createuser'),
-    # 启用通过POST获取令牌包括用户的用户名和密码
+
+    # /users/infos/
+    url(r'^infos/$',views.UserCenterView.as_view()),
+    # /users/emails/
+    url(r'^emails/$',views.UserEmailView.as_view()),
 
 ]
 

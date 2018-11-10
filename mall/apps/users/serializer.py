@@ -12,7 +12,6 @@ from users.models import User
 # 数据入库 选择 ModelSerializer 肯定有 模型
 
 
-
 class RegisterCreateUserSerializer(serializers.ModelSerializer):
     """
     6个参数(username,password,password2,mobile,sms_code,allow)
@@ -128,4 +127,34 @@ class RegisterCreateUserSerializer(serializers.ModelSerializer):
 
 
         return user
+
+
+# 用户中心序列化器
+class UserCenterSerializer(serializers.ModelSerializer):
+
+    """
+    用户详细信息序列化器
+    """
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'mobile', 'email','email_active')
+
+
+class UserEmailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+
+
+
+
+
+
+
+
+
+
+
 
