@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^infos/$',views.UserCenterView.as_view()),
     # /users/emails/
     url(r'^emails/$',views.UserEmailView.as_view()),
+    # /users/emails/verifications/
+    url(r'^emails/verification/$',views.UserActiveView.as_view()),
 
 ]
 

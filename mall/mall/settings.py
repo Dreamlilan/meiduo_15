@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 注册子应用
     'users.apps.UsersConfig',
-    'verifications.apps.VerificationsConfig',
     'areas.apps.AreasConfig',
     'carts.apps.CartsConfig',
     'contents.apps.ContentsConfig',

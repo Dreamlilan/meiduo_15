@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from rest_framework import status
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -10,7 +11,7 @@ from apps.users.serializer import RegisterCreateUserSerializer, UserCenterSerial
 from rest_framework_jwt.utils import jwt_response_payload_handler
 
 # 创建用户名视图
-from users.utils import generic_active_url
+from users.utils import generic_active_url, get_active_user
 
 
 class RegisterUsernameCountAPIView(APIView):
@@ -145,37 +146,75 @@ class UserEmailView(APIView):
         serializer.is_valid(raise_exception=True)
         # 4.更新数据
         serializer.save()
-        # 5.发送激活邮件
-        from django.core.mail import send_mail
-        """
-        send_mail( subject , message , from_email , recipient_list , html_message=None )
-        subject 邮件标题
-        message 普通邮件正文， 普通字符串
-        from_email 发件人
-        recipient_list 收件人列表
-        html_message 多媒体邮件正文，可以是html字符串
-        """
-        subject = '美多商城'
-        message = ''
-        from_email = '18834078298@163.com'
-        email = data.get('email')
-        recipient_list = [email]
-        # 可以设置以下 html的样式等信息
-        verify_url = generic_active_url(user.id,email)
-        html_message = '<p>尊敬的用户您好！</p>' \
-                   '<p>感谢您使用美多商城。</p>' \
-                   '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
-                   '<p><a href="%s">%s<a></p>' % (email, verify_url, verify_url)
-        send_mail(subject=subject,
-                  message=message,
-                  from_email=from_email,
-                  recipient_list=recipient_list,
-                  html_message=html_message
-                  )
+        # # 5.发送激活邮件
+        from celery_tasks.emails.tasks import send_active_email
+        send_active_email.delay(data.get('email'),request.user.id)
+        # from django.core.mail import send_mail
+        # """
+        # send_mail( subject , message , from_email , recipient_list , html_message=None )
+        # subject 邮件标题
+        # message 普通邮件正文， 普通字符串
+        # from_email 发件人
+        # recipient_list 收件人列表
+        # html_message 多媒体邮件正文，可以是html字符串
+        # """
+        # subject = '美多商城'
+        # message = ''
+        # from_email = '18834078298@163.com'
+        # email = data.get('email')
+        # recipient_list = [email]
+        # # 可以设置以下 html的样式等信息
+        # verify_url = generic_active_url(user.id,email)
+        # html_message = '<p>尊敬的用户您好！</p>' \
+        #            '<p>感谢您使用美多商城。</p>' \
+        #            '<p>您的邮箱为：%s 。请点击此链接激活您的邮箱：</p>' \
+        #            '<p><a href="%s">%s<a></p>' % (email, verify_url, verify_url)
+        # send_mail(subject=subject,
+        #           message=message,
+        #           from_email=from_email,
+        #           recipient_list=recipient_list,
+        #           html_message=html_message
+        #           )
 
 
         # 6.返回响应
         return Response(serializer.data)
+
+
+"""
+点击激活url,会跳转到含有token信息的页面，这个token中user_id和email信息
+前端发送ajax请求，将token发送给后端
+1.接收token；
+2.对token进行解析；
+3.返回响应；
+GET     /users/emails/verifications/
+"""
+class UserActiveView(APIView):
+
+    def get(self,request):
+
+        # 1. 接收token
+        token = request.query_params.get('token')
+        if token is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        # 2. 解析token
+        user = get_active_user(token)
+        if token is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        user.email_active = True
+        user.save()
+        # 3.返回响应
+        return Response({'msg':'ok'})
+
+
+
+
+
+
+
+
+
+
 
 
 

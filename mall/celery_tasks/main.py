@@ -19,7 +19,7 @@ if not os.getenv('DJANGO_SETTINGS_MODULE'):
 # 以上配置加载到 app创建前边,因为代码从上往下执行，要先给celery配置好环境，才可以与项目文件发生关系
 
 # 1.创建celery对象(要使用celery，首先要创建celery对象)
-# 第一个参数: main 一般以 celery的文件夹为名字 ,不要重复 (参数main 设置脚本名)
+# 第一个参数: main 一 般以 celery的文件夹为名字 ,不要重复 (参数main 设置脚本名)
 app = Celery('celery_tasks')
 
 # 2.设置中间人broker
@@ -30,7 +30,7 @@ app.config_from_object('celery_tasks.config')
 # autodiscover_tasks 第一个参数就是列表
 # 列表中的元素 是 任务包的路径
 # 路径是从 celery_tasks 开始
-app.autodiscover_tasks(['celery_tasks.sms'])
+app.autodiscover_tasks(['celery_tasks.sms','celery_tasks.emails'])
 
 
 # worker 是通过指令来执行的
