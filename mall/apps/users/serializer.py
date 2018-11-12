@@ -4,7 +4,8 @@ import re
 from django_redis import get_redis_connection
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
-from users.models import User
+from users.models import User, Address
+
 
 # serializers.ModelSerializer
 # serializers.Serializer
@@ -18,15 +19,15 @@ class RegisterCreateUserSerializer(serializers.ModelSerializer):
 
     """
 
-    sms_code = serializers.CharField(label='短信验证码', min_length=6, max_length=6, required=True,write_only=True)
-    password2 = serializers.CharField(label='确认密码', required=True,write_only=True)
-    allow = serializers.CharField(label='同意操作', required=True,write_only=True)
+    sms_code = serializers.CharField(label='短信验证码', min_length=6, max_length=6, required=True, write_only=True)
+    password2 = serializers.CharField(label='确认密码', required=True, write_only=True)
+    allow = serializers.CharField(label='同意操作', required=True, write_only=True)
     token = serializers.CharField(label='登录状态token', read_only=True)  # 增加token字段
 
     # ModelSerializer 自动生成字段的时候 是根据 fields 列表来生成的
     class Meta:
         model = User
-        fields = ('id', 'username', 'password', 'mobile', 'password2', 'sms_code', 'allow','token')
+        fields = ('id', 'username', 'password', 'mobile', 'password2', 'sms_code', 'allow', 'token')
         extra_kwargs = {
             'id': {'read_only': True},
             'username': {
@@ -118,43 +119,55 @@ class RegisterCreateUserSerializer(serializers.ModelSerializer):
         jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
 
         user.token = token
-
-
 
         return user
 
 
 # 用户中心序列化器
 class UserCenterSerializer(serializers.ModelSerializer):
-
     """
     用户详细信息序列化器
     """
+
     class Meta:
         model = User
-        fields = ('id', 'username', 'mobile', 'email','email_active')
+        fields = ('id', 'username', 'mobile', 'email', 'email_active')
 
 
 class UserEmailSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('email',)
 
 
+class AddressSerializer(serializers.ModelSerializer):
+    province = serializers.StringRelatedField(read_only=True)
+    city = serializers.StringRelatedField(read_only=True)
+    district = serializers.StringRelatedField(read_only=True)
+    province_id = serializers.IntegerField(label='省ID', required=True)
+    city_id = serializers.IntegerField(label='市ID', required=True)
+    district_id = serializers.IntegerField(label='区ID', required=True)
+    mobile = serializers.RegexField(label='手机号', regex=r'^1[3-9]\d{9}$')
+
+    class Meta:
+        model = Address
+        exclude = ('user', 'is_deleted', 'create_time', 'update_time')
+
+    def create(self, validated_data):
+
+        """
+        我们并没有让前端传递用户的的 user_id 因为 我们是采用的jwt认证方式
+        我们可以获取user_id 所以 validated_data 没有user_id
+        但是我们在调用 系统的 crate方法的时候  Address.objects.create(**validated_data)
+        Address必须要 user_id 这个外键,所以就报错了507  {"message":"服务器内部错误"}
 
 
+        """
+        validated_data['user'] = self.context['request'].user
 
-
-
-
-
-
-
-
-
+        # super() 指向 单继承的 ModelSerializer
+        return super().create(validated_data)

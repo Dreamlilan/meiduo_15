@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from users.models import User
-from apps.users.serializer import RegisterCreateUserSerializer, UserCenterSerializer
+from apps.users.serializer import RegisterCreateUserSerializer, UserCenterSerializer, AddressSerializer
 from rest_framework_jwt.utils import jwt_response_payload_handler
 
 # 创建用户名视图
@@ -206,6 +206,26 @@ class UserActiveView(APIView):
         # 3.返回响应
         return Response({'msg':'ok'})
 
+"""
+
+新增地址功能
+
+前端将用户提交的数据 传递给后端
+
+1.后端接受数据
+2.对数据进行校验
+3.数据入库
+4.返回响应
+
+POST    users/addresses/
+
+"""
+from rest_framework.generics import CreateAPIView
+
+
+class AddressCreateAPIView(CreateAPIView):
+
+    serializer_class = AddressSerializer
 
 
 
