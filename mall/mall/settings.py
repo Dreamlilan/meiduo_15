@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     'contents.apps.ContentsConfig',
     'goods.apps.GoodsConfig',
     'oauth.apps.OauthConfig',
-    'orders.apps.OrdersConfig',
-    'pay.apps.PayConfig',
     # 添加 rest_framework
     'rest_framework',
     'corsheaders',
@@ -172,6 +170,14 @@ CACHES = {
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "session"
 
+# DRF扩展
+REST_FRAMEWORK_EXTENSIONS = {
+    # 缓存时间
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 60,
+    # 缓存存储
+    'DEFAULT_USE_CACHE': 'default',
+}
+
 # 日志文件的配置信息
 LOGGING = {
     'version': 1,
@@ -222,6 +228,7 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+
     ),
 }
 

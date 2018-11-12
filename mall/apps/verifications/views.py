@@ -60,6 +60,7 @@ class RegisterSmsCodeAPIView(APIView):
         from random import randint
         sms_code = '%06d'%randint(0,999999)
         # 4.保存短信，发送短信
+        # celery 异步操作
         redis_conn = get_redis_connection('code')
         redis_conn.setex('sms_%s'%mobile,300,sms_code)
 
