@@ -1,13 +1,17 @@
 from django.shortcuts import render
 
 # Create your views here.
+from rest_framework import mixins
+from rest_framework import serializers
 from rest_framework import status
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import GenericViewSet
+
 from users.models import User
-from apps.users.serializer import RegisterCreateUserSerializer, UserCenterSerializer, AddressSerializer
+from users.serializer import RegisterCreateUserSerializer, UserCenterSerializer, AddressSerializer
 from rest_framework_jwt.utils import jwt_response_payload_handler
 
 # 创建用户名视图
@@ -20,14 +24,13 @@ class RegisterUsernameCountAPIView(APIView):
     GET:  /users/usernames/(?P<username>\w{5,20})/count/
     """
 
-    def get(self,request,username):
-
-        #通过模型查询,获取用户名个数
+    def get(self, request, username):
+        # 通过模型查询,获取用户名个数
         count = User.objects.filter(username=username).count()
-        #组织数据
+        # 组织数据
         context = {
-            'count':count,
-            'username':username
+            'count': count,
+            'username': username
         }
         return Response(context)
 
@@ -37,15 +40,15 @@ class RegisterPhoneCountAPIView(APIView):
     查询手机号的个数
     GET ： /users/phones/(?P<mobile>1(345789)\d{9})/count/
     """
-    def get(self,request,mobile):
 
+    def get(self, request, mobile):
         # 1. 通过模型类查询获取手机号个数
         count = User.objects.filter(mobile=mobile).count()
 
         #  2. 组织数据
         context = {
-            'count':count,
-            'mobile':mobile
+            'count': count,
+            'mobile': mobile
         }
 
         # 3. 返回响应
@@ -58,8 +61,10 @@ class RegisterPhoneCountAPIView(APIView):
 3.数据入库
 4.返回响应
 """
+
+
 class RegisterCreateUserView(APIView):
-    def post(self,request):
+    def post(self, request):
         # 1.接收前段提交的数据
         # username = request.form.get('usernmae')
         # username = request.form.get('usernmae')
@@ -78,16 +83,13 @@ class RegisterCreateUserView(APIView):
         return Response(serializer.data)
 
 
-
 # 使用一级视图
 # GET     /users/infos
 class UserCenterView(APIView):
-
     # 1. 添加权限
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
-
+    def get(self, request):
         # 2. 获取用户信息
         user = request.user
 
@@ -95,8 +97,6 @@ class UserCenterView(APIView):
         serializer = UserCenterSerializer(user)
 
         return Response(serializer.data)
-
-
 
 
 # 使用三级视图
@@ -130,25 +130,24 @@ PUT  /users/emails/
 
 from .serializer import UserEmailSerializer
 
-class UserEmailView(APIView):
 
+class UserEmailView(APIView):
     # 1.这个接口必须是登陆用户；
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
-
         # 2.接收参数
         data = request.data
         user = request.user
 
         # 3.验证数据
-        serializer = UserEmailSerializer(instance=user,data=data)
+        serializer = UserEmailSerializer(instance=user, data=data)
         serializer.is_valid(raise_exception=True)
         # 4.更新数据
         serializer.save()
         # # 5.发送激活邮件
         from celery_tasks.emails.tasks import send_active_email
-        send_active_email.delay(data.get('email'),request.user.id)
+        send_active_email.delay(data.get('email'), request.user.id)
         # from django.core.mail import send_mail
         # """
         # send_mail( subject , message , from_email , recipient_list , html_message=None )
@@ -189,9 +188,10 @@ class UserEmailView(APIView):
 3.返回响应；
 GET     /users/emails/verifications/
 """
-class UserActiveView(APIView):
 
-    def get(self,request):
+
+class UserActiveView(APIView):
+    def get(self, request):
 
         # 1. 接收token
         token = request.query_params.get('token')
@@ -204,7 +204,8 @@ class UserActiveView(APIView):
         user.email_active = True
         user.save()
         # 3.返回响应
-        return Response({'msg':'ok'})
+        return Response({'msg': 'ok'})
+
 
 """
 
@@ -224,26 +225,4 @@ from rest_framework.generics import CreateAPIView
 
 
 class AddressCreateAPIView(CreateAPIView):
-
     serializer_class = AddressSerializer
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
