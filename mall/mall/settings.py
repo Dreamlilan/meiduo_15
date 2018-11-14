@@ -67,7 +67,7 @@ ROOT_URLCONF = 'mall.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -288,3 +288,6 @@ CKEDITOR_CONFIGS = {
 CKEDITOR_UPLOAD_PATH = ''  # 上传图片保存路径，使用了FastDFS，所以此处设为''
 # 在Django配置中设置自定义文件存储类
 DEFAULT_FILE_STORAGE = 'utils.fastdfs.fastdfsstorage.MyStorage'
+
+# 生成的静态html文件保存目录
+GENERATED_STATIC_HTML_FILES_DIR = os.path.join(os.path.dirname(BASE_DIR), 'front')
