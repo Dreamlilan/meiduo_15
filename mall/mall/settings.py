@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -26,8 +25,9 @@ SECRET_KEY = 'i*3yccae*6x&au&j)we&r+(+d_9t7f)w8!^)s@aemf-vycdcr!'
 DEBUG = True
 
 import sys
+
 # path 是列表 0 表示优先将数据插入到列表最前面
-sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Application definition
 
 INSTALLED_APPS = [
@@ -80,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mall.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -103,7 +102,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -122,7 +120,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -135,7 +132,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -219,7 +215,6 @@ LOGGING = {
     }
 }
 
-
 # 异常处理设置，优先采用自定义的异常处理器
 REST_FRAMEWORK = {
     # 异常处理
@@ -233,15 +228,15 @@ REST_FRAMEWORK = {
 }
 
 import datetime
+
 JWT_AUTH = {
     # JWT_EXPIRATION_DELTA 指明token的有效期
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     # 自定义返回数据的方法
     'JWT_RESPONSE_PAYLOAD_HANDLER':
-    'utils.users.jwt_response_payload_handler',
+        'utils.users.jwt_response_payload_handler',
 
 }
-
 
 # 告知Django认证系统使用我们自定义的模型类
 AUTH_USER_MODEL = 'users.User'
@@ -258,22 +253,24 @@ CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 ALLOWED_HOSTS = ['*']
 
 # 告知Django使用我们自定义的认证后端
-AUTHENTICATION_BACKENDS = ['utils.users.MobileUsernameModelBackend',]
+AUTHENTICATION_BACKENDS = ['utils.users.MobileUsernameModelBackend', ]
 
 # QQ登录参数
 QQ_CLIENT_ID = '101474184'  # appid
-QQ_CLIENT_SECRET = 'c6ce949e04e12ecc909ae6a8b09b637c'       # app sceret_key
+QQ_CLIENT_SECRET = 'c6ce949e04e12ecc909ae6a8b09b637c'  # app sceret_key
 QQ_REDIRECT_URI = 'http://www.meiduo.site:8080/oauth_callback.html'
-
 
 # 设置邮箱的配置信息
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 25
-#发送邮件的邮箱
+# 发送邮件的邮箱
 EMAIL_HOST_USER = '18834078298@163.com'
-#在邮箱中设置的客户端授权密码
+# 在邮箱中设置的客户端授权密码
 EMAIL_HOST_PASSWORD = '123456abc'
-#收件人看到的发件人
+# 收件人看到的发件人
 EMAIL_FROM = '美多商城<18834078298@163.com>'
 
+# FastDFS
+FDFS_URL = 'http://192.168.144.130:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址
+FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
