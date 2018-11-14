@@ -286,3 +286,5 @@ CKEDITOR_CONFIGS = {
     },
 }
 CKEDITOR_UPLOAD_PATH = ''  # 上传图片保存路径，使用了FastDFS，所以此处设为''
+# 在Django配置中设置自定义文件存储类
+DEFAULT_FILE_STORAGE = 'utils.fastdfs.fastdfsstorage.MyStorage'
