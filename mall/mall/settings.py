@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'areas.apps.AreasConfig',
     'carts.apps.CartsConfig',
-    'contents.apps.ContentsConfig',
     'goods.apps.GoodsConfig',
+    'contents.apps.ContentsConfig',
     'oauth.apps.OauthConfig',
     # 添加 rest_framework
     'rest_framework',
