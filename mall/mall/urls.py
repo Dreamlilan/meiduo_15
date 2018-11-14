@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^verifications/',include('verifications.urls',namespace='verifications')),
     url(r'^oauth/',include('oauth.urls',namespace='oauth')),
     url(r'^areas/',include('areas.urls',namespace='areas')),
-
-
+    # 添加ckeditor路由
+    url(r'^ckeditor/', include('ckeditor_uploader.urls')),
 ]
