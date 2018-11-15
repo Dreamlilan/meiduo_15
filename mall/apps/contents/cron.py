@@ -7,7 +7,6 @@ from django.template import loader
 from django.conf import settings
 
 
-
 def generate_static_index_html():
     """
     生成静态的主页html
@@ -78,10 +77,8 @@ def generate_static_index_html():
     # 1. 加载模板
     # get_template 回到模板路径中加载模板
     template = loader.get_template('index.html')
-
     # 2. 模板渲染数据
     html_data = template.render(context)
-
     # 3. 写入文件
     file_path = os.path.join(settings.GENERATED_STATIC_HTML_FILES_DIR,'index.html')
 

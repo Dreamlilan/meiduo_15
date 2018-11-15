@@ -49,6 +49,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'ckeditor',  # 富文本编辑器
     'ckeditor_uploader',  # 富文本编辑器上传图片模块
+    'django_crontab',  # 定时任务
+]
+# 定时任务
+CRONJOBS = [
+    # 每5分钟执行一次生成主页静态文件
+    ('*/1 * * * *', 'contents.cron.generate_static_index_html', '>> /home/python/Desktop/code15/meiduo_15/mall/logs/crontab.log')
 ]
 
 MIDDLEWARE = [
@@ -67,7 +73,7 @@ ROOT_URLCONF = 'mall.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -249,10 +255,11 @@ CORS_ORIGIN_WHITELIST = (
     'localhost:8080',
     'www.meiduo.site:8080'
 )
+
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
 # 允许所有主机访问
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['api.meiduo.site','127.0.0.1']
 
 # 告知Django使用我们自定义的认证后端
 AUTHENTICATION_BACKENDS = ['utils.users.MobileUsernameModelBackend', ]
@@ -274,7 +281,7 @@ EMAIL_HOST_PASSWORD = '123456abc'
 EMAIL_FROM = '美多商城<18834078298@163.com>'
 
 # FastDFS
-FDFS_URL = 'http://192.168.144.130:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址
+FDFS_URL = 'http://192.168.144.131:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址1
 FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
 
 # 富文本编辑器ckeditor配置

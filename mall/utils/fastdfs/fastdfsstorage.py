@@ -1,6 +1,6 @@
 #1.您的自定义存储系统必须是以下子类 django.core.files.storage.Storage：
 from django.core.files.storage import Storage
-from fdfs_client.client import Fdfs_client
+
 
 from mall import settings
 
@@ -24,6 +24,7 @@ class MyStorage(Storage):
     def _save(self,name,content,max_length=None):
 
         # 1.创建客户端的实例对象
+        from fdfs_client.client import Fdfs_client
         client = Fdfs_client(self.conf_path)
         # 2.上传图片, read的读取的资源是二进制
         data = content.read()
