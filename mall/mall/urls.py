@@ -24,4 +24,7 @@ urlpatterns = [
     url(r'^areas/',include('areas.urls',namespace='areas')),
     # 添加ckeditor路由
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
+    # 商品列表&推荐信息
+    url(r'^goods/',include('goods.urls',namespace='goods')),
+
 ]

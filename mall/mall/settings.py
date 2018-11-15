@@ -233,6 +233,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
 
     ),
+    # 分页
+    # 'DEFAULT_PAGINATION_CLASS': 'utils.pagination.StandardResultsSetPagination',
 }
 
 import datetime
@@ -281,7 +283,7 @@ EMAIL_HOST_PASSWORD = '123456abc'
 EMAIL_FROM = '美多商城<18834078298@163.com>'
 
 # FastDFS
-FDFS_URL = 'http://192.168.144.131:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址1
+FDFS_URL = 'http://192.168.144.132:8888/'  # 访问图片的路径域名 ip地址修改为自己机器的ip地址1
 FDFS_CLIENT_CONF = os.path.join(BASE_DIR, 'utils/fastdfs/client.conf')
 
 # 富文本编辑器ckeditor配置
