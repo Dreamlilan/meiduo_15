@@ -25,6 +25,8 @@ from .serializers import HotSKUSerializer
 4.通过JsonResponse返回数据；
 GET   /goods/categories/(?P<category_id>\d+)/hotskus
 """
+
+
 # 方法一：使用一级视图实现
 # class HotSKUView(APIView):
 #     def get(self,request,category_id):
@@ -43,6 +45,7 @@ GET   /goods/categories/(?P<category_id>\d+)/hotskus
 # 以上需求用三级视图实现：
 class HotSKUView(ListAPIView):
     serializer_class = HotSKUSerializer
+
     # category_id 无法获取
     # queryset = SKU.objects.filter(category_id=category_id,is_launched=True).order_by('-sales')[:2]
 
@@ -63,12 +66,14 @@ class HotSKUView(ListAPIView):
 
 GET  /goods/categories/(?P<category_id>\d+)/skus/?ordering=xxx&page_size=xxx&page=xxx
 """
+
+
 class SKUListVIew(ListAPIView):
     # 1. 排序
     filter_backends = [OrderingFilter]
     # 设置排序字段，但在实际工作中，具体根据什么来排序要看产品经理的意思
     # 备注：1.1 排序默认是升序aesc
-    ordering_fields = ['create_time','price','sales']
+    ordering_fields = ['create_time', 'price', 'sales']
     # 备注：1.2 url参数 ?ordering = 字段名
 
     # 2.指定分页类 ???????
@@ -88,32 +93,3 @@ class SKUListVIew(ListAPIView):
         category_id = self.kwargs['category_id']
 
         return SKU.objects.filter(category_id=category_id, is_launched=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

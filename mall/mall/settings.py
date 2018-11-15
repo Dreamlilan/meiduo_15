@@ -54,7 +54,8 @@ INSTALLED_APPS = [
 # 定时任务
 CRONJOBS = [
     # 每5分钟执行一次生成主页静态文件
-    ('*/1 * * * *', 'contents.cron.generate_static_index_html', '>> /home/python/Desktop/code15/meiduo_15/mall/logs/crontab.log')
+    ('*/1 * * * *', 'contents.cron.generate_static_index_html',
+     '>> /home/python/Desktop/code15/meiduo_15/mall/logs/crontab.log')
 ]
 
 MIDDLEWARE = [
@@ -261,7 +262,7 @@ CORS_ORIGIN_WHITELIST = (
 CORS_ALLOW_CREDENTIALS = True  # 允许携带cookie
 
 # 允许所有主机访问
-ALLOWED_HOSTS = ['api.meiduo.site','127.0.0.1']
+ALLOWED_HOSTS = ['api.meiduo.site', '127.0.0.1']
 
 # 告知Django使用我们自定义的认证后端
 AUTHENTICATION_BACKENDS = ['utils.users.MobileUsernameModelBackend', ]
