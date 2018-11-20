@@ -1,7 +1,5 @@
-#1.您的自定义存储系统必须是以下子类 django.core.files.storage.Storage：
+# 1.您的自定义存储系统必须是以下子类 django.core.files.storage.Storage：
 from django.core.files.storage import Storage
-
-
 from mall import settings
 
 
@@ -57,7 +55,7 @@ class MyStorage(Storage):
 
         # 我们访问图片的时候 真实的路径是 http://ip:port/ + file_id
         # 所以我们返回url的时候 就直接 把拼接好的url返回
-        # return 'http://192.168.144.130:8888/' + name
+        # return 'http://192.168.144.132:8888/' + name
         # return settings.FDFS_URL + name
         return self.ip + name
 

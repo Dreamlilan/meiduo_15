@@ -4,6 +4,8 @@ import re
 from django_redis import get_redis_connection
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
+
+from goods.models import SKU
 from users.models import User, Address
 
 
@@ -171,3 +173,44 @@ class AddressSerializer(serializers.ModelSerializer):
 
         # super() 指向 单继承的 ModelSerializer
         return super().create(validated_data)
+
+
+class UserHistorySerializer(serializers.ModelSerializer):
+
+    sku_id = serializers.IntegerField(label='商品编号',min_value=1,required=True)
+
+    class Meta:
+        model = SKU
+        fields = ['sku_id']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
+from django_redis import get_redis_connection
 from rest_framework import mixins
 from rest_framework import serializers
 from rest_framework import status
@@ -11,7 +12,8 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from users.models import User
-from users.serializer import RegisterCreateUserSerializer, UserCenterSerializer, AddressSerializer
+from users.serializer import RegisterCreateUserSerializer, UserCenterSerializer, AddressSerializer, \
+    UserHistorySerializer
 from rest_framework_jwt.utils import jwt_response_payload_handler
 
 # 创建用户名视图
@@ -226,3 +228,85 @@ from rest_framework.generics import CreateAPIView
 
 class AddressCreateAPIView(CreateAPIView):
     serializer_class = AddressSerializer
+
+
+"""
+需求一：用户浏览记录
+1.用户必须是登录状态；***
+2.浏览记录数据存储在redis中；
+3.使用redis中的List容器(数据类型)进行存储；
+
+思路分析：
+1.添加最近浏览记录；
+    在详情页面发送请求，请求中包含sku_id,用户信息JWT
+    1.1 接收数据，并且对数据进行校验；
+    1.2 保存数据；
+    1.3 返回响应；
+
+2.获取最近浏览记录；
+    2.1 接收数据（用户信息，以JWT形式进行传递）；
+    2.2 查询数据；
+    2.3 返回响应；
+
+POST  /users/browerhistories/
+"""
+
+
+class UserHistoryView(APIView):
+    # 1 用户必须是登陆状态
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+
+        user = request.user
+        # 1. 接收数据，并对数据进行校验；
+        serializer = UserHistorySerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        # 2. 保存数据到redis
+        redis_con = get_redis_connection('history')
+
+        # 2.1 获取商品id
+        sku_id = serializer.validated_data.get('sku_id')
+
+        # 2.2 保存到redis中
+        redis_con.lpush('history_%s'%user.id,sku_id)
+
+        # 3. 返回响应
+        return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

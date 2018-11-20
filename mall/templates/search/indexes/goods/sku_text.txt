@@ -1,0 +1,3 @@
+{{ object.name }}
+{{ caption }}
+{{ category_id }}
